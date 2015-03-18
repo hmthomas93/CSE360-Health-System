@@ -97,13 +97,13 @@ public class PatientLogin extends JFrame {
 					
 					if(rs.next())
 					{
-						JOptionPane.showMessageDialog(null, "Username and password are correct.");
+						//JOptionPane.showMessageDialog(null, "Username and password are correct.");
 						close();
 						
 						PatientMenu pm = new PatientMenu();
 						pm.setVisible(true);
 					}else	
-						JOptionPane.showMessageDialog(null, "Username and password are invalid.");
+						//JOptionPane.showMessageDialog(null, "Username and password are invalid.");
 
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null,e);
