@@ -14,6 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
 
 public class DoctorMenu extends JFrame {
 
@@ -51,7 +54,7 @@ public class DoctorMenu extends JFrame {
 		setBounds(100, 100, 515, 420);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 153));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -68,6 +71,14 @@ public class DoctorMenu extends JFrame {
 		contentPane.add(btnCreatePatientLogin);
 		
 		JButton btnSelectPatient = new JButton("Select Patient");
+		btnSelectPatient.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SelectPatient sp = new SelectPatient();
+				sp.setVisible(true);
+				close();
+			}
+		});
 		btnSelectPatient.setBounds(174, 138, 149, 23);
 		contentPane.add(btnSelectPatient);
 		
@@ -82,7 +93,7 @@ public class DoctorMenu extends JFrame {
 		btnNewButton.setBounds(174, 233, 149, 23);
 		contentPane.add(btnNewButton);
 		
-		JButton btnChangePassword = new JButton("Change Password");
+		JButton btnChangePassword = new JButton("Update Password");
 		btnChangePassword.setBounds(174, 184, 149, 23);
 		contentPane.add(btnChangePassword);
 	}

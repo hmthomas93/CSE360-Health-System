@@ -21,6 +21,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EtchedBorder;
 
 public class DoctorLogin extends JFrame {
 
@@ -68,7 +72,7 @@ public class DoctorLogin extends JFrame {
 		setBounds(100, 100, 515, 420);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 153));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
