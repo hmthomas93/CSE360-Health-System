@@ -14,8 +14,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PatientMenu extends JFrame {
+	
+	
 
 	/**
 	 * 
@@ -70,7 +74,7 @@ public class PatientMenu extends JFrame {
 				close();
 			}
 		});
-		btnCheckDoctorFeedback.setBounds(156, 136, 179, 23);
+		btnCheckDoctorFeedback.setBounds(156, 95, 179, 23);
 		contentPane.add(btnCheckDoctorFeedback);
 		
 		JButton btnEditSymptoms = new JButton("Edit Symptoms");
@@ -83,7 +87,7 @@ public class PatientMenu extends JFrame {
 				close();
 			}
 		});
-		btnEditSymptoms.setBounds(156, 190, 179, 23);
+		btnEditSymptoms.setBounds(156, 148, 179, 23);
 		contentPane.add(btnEditSymptoms);
 		
 		JButton btnNewButton = new JButton("Logout");
@@ -97,5 +101,22 @@ public class PatientMenu extends JFrame {
 		});
 		btnNewButton.setBounds(156, 245, 179, 23);
 		contentPane.add(btnNewButton);
+		
+		JButton btnUpdatePassword = new JButton("Update Password");
+		btnUpdatePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				UpdatePassword up = new UpdatePassword();
+				up.setVisible(true);
+				close();
+			}
+		});
+		btnUpdatePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnUpdatePassword.setFont(new Font("Calibri", Font.PLAIN, 12));
+		btnUpdatePassword.setBounds(156, 198, 179, 23);
+		contentPane.add(btnUpdatePassword);
 	}
 }
