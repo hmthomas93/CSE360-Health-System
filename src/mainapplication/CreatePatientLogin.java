@@ -78,12 +78,12 @@ public class CreatePatientLogin extends JFrame {
 		
 		JLabel lblLastName = new JLabel("Last Name");
 		lblLastName.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblLastName.setBounds(105, 144, 64, 14);
+		lblLastName.setBounds(105, 144, 73, 14);
 		contentPane.add(lblLastName);
 		
 		JLabel lblDobyyyymmdd = new JLabel("DOB (yyyy-mm-dd)");
 		lblDobyyyymmdd.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblDobyyyymmdd.setBounds(65, 194, 104, 14);
+		lblDobyyyymmdd.setBounds(65, 194, 113, 14);
 		contentPane.add(lblDobyyyymmdd);
 		
 		JLabel lblUsername = new JLabel("Username");
