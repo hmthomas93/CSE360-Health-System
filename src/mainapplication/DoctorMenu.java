@@ -14,9 +14,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
+
 import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DoctorMenu extends JFrame {
 
@@ -73,7 +77,7 @@ public class DoctorMenu extends JFrame {
 		JButton btnSelectPatient = new JButton("Select Patient");
 		btnSelectPatient.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 				SelectPatient sp = new SelectPatient();
 				sp.setVisible(true);
 				close();

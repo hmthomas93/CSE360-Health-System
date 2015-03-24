@@ -123,9 +123,6 @@ public class UpdatePasswordDr extends JFrame {
 								JOptionPane.showMessageDialog(null, "Password successfully updated.");
 						}else
 						JOptionPane.showMessageDialog(null, "Current password is incorrect.");
-
-
-
 				}catch(Exception ex){
 					JOptionPane.showMessageDialog(null,ex);
 				}

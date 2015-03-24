@@ -15,7 +15,7 @@ public class PatientLogin extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	public static String username;
 	Connection con = MySQLConnection.ConnectDB();
 	
 	private JPanel contentPane;
@@ -98,6 +98,7 @@ public class PatientLogin extends JFrame {
 					if(rs.next())
 					{
 						JOptionPane.showMessageDialog(null, "Username and password are correct.");
+						username = text_username.getText();
 						close();
 						
 						PatientMenu pm = new PatientMenu();
@@ -117,5 +118,10 @@ public class PatientLogin extends JFrame {
 		lblPleaseLogin.setFont(new Font("Calibri", Font.BOLD, 18));
 		lblPleaseLogin.setBounds(179, 88, 148, 14);
 		contentPane.add(lblPleaseLogin);
+	}
+	
+	public static String getUsername()
+	{
+		return username;
 	}
 }

@@ -36,6 +36,8 @@ import javax.swing.border.MatteBorder;
 public class SelectPatient extends JFrame {
 
 	private JPanel contentPane;
+	public static String firstname;
+	public static String lastname;
 	
 	Connection con = MySQLConnection.ConnectDB();
 	
@@ -98,9 +100,9 @@ public class SelectPatient extends JFrame {
 
 			while(rs.next())
 			{
-				String first = rs.getString("firstname");
-				String last = rs.getString("lastname");
-				String flname = first + " " + last;
+				firstname = rs.getString("firstname");
+				lastname = rs.getString("lastname");
+				String flname = firstname + " " + lastname;
 				listModel.addElement(flname);
 			}
 			
@@ -112,7 +114,13 @@ public class SelectPatient extends JFrame {
 		btnSelect.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-						
+				String selected = list.getSelectedValue().toString();
+				String[] result = selected.split(" ");
+				firstname = result[0];
+				lastname = result[1];
+				ViewSelectedPatient vsp = new ViewSelectedPatient();
+				vsp.setVisible(true);
+				close();
 			}
 		});
 		btnSelect.setBounds(151, 314, 89, 23);
@@ -131,5 +139,15 @@ public class SelectPatient extends JFrame {
 		btnBack.setBounds(267, 314, 89, 23);
 		contentPane.add(btnBack);
 		
+	}
+	
+	public static String getFirstName()
+	{
+		return firstname;
+	}
+	
+	public static String getLastName()
+	{
+		return lastname;
 	}
 }
