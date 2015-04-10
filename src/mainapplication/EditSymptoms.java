@@ -1,6 +1,7 @@
 package mainapplication;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 
@@ -22,6 +23,7 @@ import javax.swing.JRadioButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,6 +63,7 @@ public class EditSymptoms extends JFrame {
 	}
 	
 
+		//get the selected button from the ButtonGroup
 	    public String getSelectedButtonText(ButtonGroup buttonGroup)
 	    {
 	        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
@@ -72,6 +75,13 @@ public class EditSymptoms extends JFrame {
 	        }
 	        return null;
 	    }
+	    
+	    //close current window for next window to open
+		public void close()
+		{
+			WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+			Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
+		}
 
 	/**
 	 * Create the frame.
@@ -90,8 +100,8 @@ public class EditSymptoms extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 11, 479, 309);
 		contentPane.add(tabbedPane);
-		//scale.add(n10);
-		
+
+		//create button groups so that only one button can be selected at once per category
 		ButtonGroup bGN = new ButtonGroup();
 		this.setSize(515,420);
 	    this.setVisible(true);
@@ -451,8 +461,10 @@ public class EditSymptoms extends JFrame {
 		details.setLayout(null);
 		
 		JTextArea textArea = new JTextArea();
+		textArea.setWrapStyleWord(true);
 		textArea.setFont(new Font("Calibri", Font.PLAIN, 12));
 		textArea.setBounds(10, 38, 454, 221);
+		textArea.setLineWrap(true);
 		details.add(textArea);
 		
 		JLabel lblPleaseDescribeYour = new JLabel("Please describe your symptoms in detail.");
@@ -475,8 +487,39 @@ public class EditSymptoms extends JFrame {
 				String pLevel = getSelectedButtonText(bGP);
 				String aLevel = getSelectedButtonText(bGA);
 				
+				//get total value of all symptoms
+				int total = Integer.valueOf(nLevel) + Integer.valueOf(dLevel) + Integer.valueOf(fLevel) + Integer.valueOf(pLevel) + Integer.valueOf(aLevel);
+				
+				//get average of symptoms
+				int average = total / 5;
+				String averageStr = String.valueOf(average);
+				
+				String alert = "0";
+				
+				//If the selected value is 8 or above, send an alert to the doctor
+				if(Integer.valueOf(nLevel) > 7)
+				{
+					alert = "1";
+				}
+				if(Integer.valueOf(dLevel) > 7)
+				{
+					alert = "1";
+				}				
+				if(Integer.valueOf(fLevel) > 7)
+				{
+					alert = "1";
+				}
+				if(Integer.valueOf(pLevel) > 7)
+				{
+					alert = "1";
+				}
+				if(Integer.valueOf(aLevel) > 7)
+				{
+					alert = "1";
+				}
+				
 				//Query for database
-				String sql = "UPDATE patients SET nausea=?, depression=?, fatigue=?, pain=?, anxiety=?, alert=?, details=? WHERE username=?";
+				String sql = "UPDATE patients SET nausea=?, depression=?, fatigue=?, pain=?, anxiety=?, alert=?, details=?, average=? WHERE username=?";
 				
 				try 
 				{
@@ -487,18 +530,20 @@ public class EditSymptoms extends JFrame {
 						pst.setString(3, fLevel);
 						pst.setString(4, pLevel);
 						pst.setString(5, aLevel);
-						pst.setString(6, "0");
+						pst.setString(6, alert);
 						pst.setString(7, textArea.getText());
-						pst.setString(8, username);
-						
-						System.out.println(textArea.getText());
+						pst.setString(8, averageStr);
+						pst.setString(9, username);
+
 						
 						//update database with given information
 						int rowsupdated = pst.executeUpdate();
-						if	(rowsupdated > 0)
+						//if alert=1 then send alert to doctor
+						if (alert.equals("1") && rowsupdated > 0)
+							JOptionPane.showMessageDialog(null, "Syptoms successfully sent. An alert has been sent to your doctor.");
+						//else just send symptoms to doctor
+						else if	(rowsupdated > 0)
 							JOptionPane.showMessageDialog(null, "Symptoms successfully sent to doctor.");
-					
-					
 				}catch(Exception ex){
 					JOptionPane.showMessageDialog(null,ex);
 				}
@@ -508,9 +553,21 @@ public class EditSymptoms extends JFrame {
 		contentPane.add(btnSendFeedback);
 		
 		JButton btnBack = new JButton("Back");
+		btnBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PatientMenu pm = new PatientMenu();
+				pm.setVisible(true);
+				close();
+			}
+		});
 		btnBack.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnBack.setBounds(235, 348, 138, 23);
 		contentPane.add(btnBack);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 
 }

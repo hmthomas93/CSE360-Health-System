@@ -1,5 +1,6 @@
 package mainapplication;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -96,12 +97,15 @@ public class PatientMenu extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JOptionPane.showMessageDialog(null, "Logout successfull.");
+				PatientOrDoctor pod = new PatientOrDoctor();
+				pod.setVisible(true);
 				close();
 			}
 		});
 		btnNewButton.setBounds(156, 245, 179, 23);
 		contentPane.add(btnNewButton);
 		
+		//pressing this button will take the patient to a jFrame to update their password
 		JButton btnUpdatePassword = new JButton("Update Password");
 		btnUpdatePassword.addMouseListener(new MouseAdapter() {
 			@Override
@@ -118,5 +122,9 @@ public class PatientMenu extends JFrame {
 		btnUpdatePassword.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnUpdatePassword.setBounds(156, 198, 179, 23);
 		contentPane.add(btnUpdatePassword);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 }

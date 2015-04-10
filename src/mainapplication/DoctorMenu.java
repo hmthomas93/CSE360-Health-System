@@ -1,6 +1,7 @@
 package mainapplication;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -22,9 +23,14 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JLabel;
+
+import java.awt.Font;
+
 public class DoctorMenu extends JFrame {
 
 	private JPanel contentPane;
+	public static String username = DoctorLogin.getUsername();
 
 	/**
 	 * Launch the application.
@@ -86,20 +92,41 @@ public class DoctorMenu extends JFrame {
 		btnSelectPatient.setBounds(174, 138, 149, 23);
 		contentPane.add(btnSelectPatient);
 		
+		//Clicking this button will log the user out and take them to the start screen PatientOrDoctor
 		JButton btnNewButton = new JButton("Logout");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {			
 				JOptionPane.showMessageDialog(null, "Logout successfull.");
+				PatientOrDoctor pod = new PatientOrDoctor();
+				pod.setVisible(true);
 				close();
 			}
 		});
 		btnNewButton.setBounds(174, 233, 149, 23);
 		contentPane.add(btnNewButton);
 		
+		//Clicking this button will take the doctor to a jFrame where they can update their password
 		JButton btnChangePassword = new JButton("Update Password");
+		btnChangePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				UpdatePasswordDr upd = new UpdatePasswordDr();
+				upd.setVisible(true);
+				close();
+			}
+		});
 		btnChangePassword.setBounds(174, 184, 149, 23);
 		contentPane.add(btnChangePassword);
+		
+		//Display a welcome to the doctor
+		JLabel lblWelcomeDoctor = new JLabel("Welcome Doctor " + DoctorLogin.getLastName());
+		lblWelcomeDoctor.setFont(new Font("Calibri", Font.PLAIN, 14));
+		lblWelcomeDoctor.setBounds(174, 51, 216, 14);
+		contentPane.add(lblWelcomeDoctor);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
-
 }

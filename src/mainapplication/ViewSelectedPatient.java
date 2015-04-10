@@ -1,6 +1,7 @@
 package mainapplication;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -19,8 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 public class ViewSelectedPatient extends JFrame {
 	
@@ -34,6 +39,7 @@ public class ViewSelectedPatient extends JFrame {
 	public static String pain;
 	public static String anxiety;
 	public static String details;
+	public static String alert;
 	
 	public static Connection con = MySQLConnection.ConnectDB();
 	
@@ -58,6 +64,7 @@ public class ViewSelectedPatient extends JFrame {
 		});
 	}
 	
+	//close current jFrame to open new one
 	public void close()
 	{
 		WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
@@ -79,10 +86,12 @@ public class ViewSelectedPatient extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		//get the first and last name from the selected item in SelectPatient
 		firstName = SelectPatient.getFirstName();
 		lastName = SelectPatient.getLastName();
 		
-		String sql = "SELECT dob, diagnosis, nausea, depression, fatigue, pain, anxiety, details FROM patients WHERE firstname=? AND lastname=?";
+		//query database to select all symptoms, alerts, and details given a first name and last name
+		String sql = "SELECT dob, diagnosis, nausea, depression, fatigue, pain, anxiety, details, alert FROM patients WHERE firstname=? AND lastname=?";
 		try 
 		{
 			pst = con.prepareStatement(sql);
@@ -90,6 +99,7 @@ public class ViewSelectedPatient extends JFrame {
 			pst.setString(2, lastName);
 			rs = pst.executeQuery();
 			
+			//while there is info in the database store the results in the given strings
 			while (rs.next())
 			{
 				dob = rs.getString("dob");
@@ -100,6 +110,7 @@ public class ViewSelectedPatient extends JFrame {
 				pain = rs.getString("pain");
 				anxiety = rs.getString("anxiety");
 				details = rs.getString("details");
+				alert = rs.getString("alert");
 			}
 
 		}catch(Exception ex){
@@ -108,59 +119,70 @@ public class ViewSelectedPatient extends JFrame {
 		
 		JLabel lblPatientName = new JLabel("Patient Name: " + firstName + " " + lastName);
 		lblPatientName.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblPatientName.setBounds(27, 25, 188, 14);
+		lblPatientName.setBounds(27, 65, 359, 14);
 		contentPane.add(lblPatientName);
 		
 		JLabel lblDateOfBirth = new JLabel("Date of Birth: " + dob);
 		lblDateOfBirth.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblDateOfBirth.setBounds(27, 50, 188, 14);
+		lblDateOfBirth.setBounds(27, 96, 188, 14);
 		contentPane.add(lblDateOfBirth);
-		
-		JLabel lblDiagnosis = new JLabel("Diagnosis: " + diagnosis);
-		lblDiagnosis.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblDiagnosis.setBounds(27, 75, 188, 14);
-		contentPane.add(lblDiagnosis);
 		
 		JLabel lblNauseaLevel = new JLabel("Nausea Level: " + nausea);
 		lblNauseaLevel.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblNauseaLevel.setBounds(27, 156, 129, 14);
+		lblNauseaLevel.setBounds(27, 190, 129, 14);
 		contentPane.add(lblNauseaLevel);
 		
 		JLabel lblDepressionLevel = new JLabel("Depression Level: " + depression);
 		lblDepressionLevel.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblDepressionLevel.setBounds(27, 181, 143, 14);
+		lblDepressionLevel.setBounds(27, 215, 143, 14);
 		contentPane.add(lblDepressionLevel);
 		
 		JLabel lblPainLevel = new JLabel("Pain Level: " + pain);
 		lblPainLevel.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblPainLevel.setBounds(27, 231, 129, 14);
+		lblPainLevel.setBounds(27, 265, 129, 14);
 		contentPane.add(lblPainLevel);
 		
 		JLabel lblNewLabel = new JLabel("Fatigue Level: " + fatigue);
 		lblNewLabel.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblNewLabel.setBounds(27, 206, 129, 14);
+		lblNewLabel.setBounds(27, 240, 129, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblAnxietyLevel = new JLabel("Anxiety Level: " + anxiety);
 		lblAnxietyLevel.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblAnxietyLevel.setBounds(27, 256, 129, 14);
+		lblAnxietyLevel.setBounds(27, 290, 129, 14);
 		contentPane.add(lblAnxietyLevel);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(242, 62, 230, 240);
+		contentPane.add(scrollPane);
+		
 		JTextArea textArea = new JTextArea(details);
+		textArea.setLineWrap(true);
+		scrollPane.setViewportView(textArea);
 		textArea.setFont(new Font("Calibri", Font.PLAIN, 12));
-		textArea.setBounds(257, 45, 232, 225);
-		contentPane.add(textArea);
+		textArea.setWrapStyleWord(true);
+		textArea.setEditable(false);
 		
 		JLabel lblDetailedNotesFrom = new JLabel("Detailed Notes From Patient");
 		lblDetailedNotesFrom.setFont(new Font("Calibri", Font.PLAIN, 12));
-		lblDetailedNotesFrom.setBounds(291, 25, 181, 14);
+		lblDetailedNotesFrom.setBounds(291, 37, 181, 14);
 		contentPane.add(lblDetailedNotesFrom);
 		
+		//upon clicking this button, the doctor is taken to a page to send the patient feedback
 		JButton btnSendFeedback = new JButton("Send Feedback");
+		btnSendFeedback.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SendFeedback sf = new SendFeedback();
+				sf.setVisible(true);
+				close();
+			}
+		});
 		btnSendFeedback.setFont(new Font("Calibri", Font.PLAIN, 12));
-		btnSendFeedback.setBounds(120, 315, 129, 23);
+		btnSendFeedback.setBounds(119, 331, 129, 23);
 		contentPane.add(btnSendFeedback);
 		
+		//upon clicking this button, the doctor is taken back to SelectPatient
 		JButton btnBack = new JButton("Back");
 		btnBack.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnBack.addMouseListener(new MouseAdapter() {
@@ -171,7 +193,33 @@ public class ViewSelectedPatient extends JFrame {
 				close();
 			}
 		});
-		btnBack.setBounds(257, 315, 129, 23);
+		btnBack.setBounds(257, 331, 129, 23);
 		contentPane.add(btnBack);
+		
+		//if there is an alert, show this jLabel, else, do not show this jLabel
+		JLabel lblTheResultsFrom = new JLabel("The results from the patient's symptoms have caused an alert.");
+		lblTheResultsFrom.setForeground(Color.RED);
+		lblTheResultsFrom.setFont(new Font("Calibri", Font.BOLD, 12));
+		lblTheResultsFrom.setBounds(27, 11, 359, 14);
+		contentPane.add(lblTheResultsFrom);
+		
+		JTextArea lblDiagnosis = new JTextArea();
+		lblDiagnosis.setLineWrap(true);
+		lblDiagnosis.setFont(new Font("Calibri", Font.PLAIN, 12));
+		lblDiagnosis.setText("Diagnosis: " + diagnosis);
+		lblDiagnosis.setWrapStyleWord(true);
+		lblDiagnosis.setEditable(false);
+		lblDiagnosis.setBackground(new Color(204, 255, 153));
+		lblDiagnosis.setBounds(25, 121, 212, 61);
+		
+		contentPane.add(lblDiagnosis);
+		lblTheResultsFrom.setVisible(false);
+		
+		if (SelectPatient.getflname().contains("Alert for "))
+			lblTheResultsFrom.setVisible(true);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 }

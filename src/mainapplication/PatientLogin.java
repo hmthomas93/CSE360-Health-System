@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class PatientLogin extends JFrame {
 	/**
@@ -78,6 +80,37 @@ public class PatientLogin extends JFrame {
 		contentPane.add(lblPassword);
 		
 		text_password = new JPasswordField();
+		text_password.addKeyListener(new KeyAdapter() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void keyPressed(KeyEvent evt) {
+				if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					String sql = "select * from patients where username=? and password=?";
+					
+					try{
+						pst = con.prepareStatement(sql);
+						pst.setString(1, text_username.getText());
+						pst.setString(2, text_password.getText());
+						rs = pst.executeQuery();
+						
+						if(rs.next())
+						{
+							JOptionPane.showMessageDialog(null, "Username and password are correct.");
+							username = text_username.getText();
+							close();
+							
+							PatientMenu pm = new PatientMenu();
+							pm.setVisible(true);
+						}else	
+							JOptionPane.showMessageDialog(null, "Username and password are invalid.");
+
+					}catch(Exception e){
+						JOptionPane.showMessageDialog(null,e);
+					}
+				}
+			}
+		});
 		text_password.setBounds(213, 168, 139, 24);
 		contentPane.add(text_password);
 		
@@ -118,6 +151,10 @@ public class PatientLogin extends JFrame {
 		lblPleaseLogin.setFont(new Font("Calibri", Font.BOLD, 18));
 		lblPleaseLogin.setBounds(179, 88, 148, 14);
 		contentPane.add(lblPleaseLogin);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 	
 	public static String getUsername()

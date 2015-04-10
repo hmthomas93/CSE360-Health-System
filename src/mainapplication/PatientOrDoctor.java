@@ -1,6 +1,7 @@
 package mainapplication;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
 import java.awt.Font;
+
 import javax.swing.ImageIcon;
 
 public class PatientOrDoctor extends JFrame {
@@ -37,7 +39,7 @@ public class PatientOrDoctor extends JFrame {
 		});
 	}
 
-	//close jframe
+	//close current jFrame to go to next jFrame 
 	public void close()
 	{
 		WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
@@ -63,6 +65,7 @@ public class PatientOrDoctor extends JFrame {
 		lblAreYouA.setBounds(128, 223, 251, 14);
 		contentPane.add(lblAreYouA);
 		
+		//Select if the user is a patient then take the user to the patient login
 		JButton btnPatient = new JButton("Patient");
 		btnPatient.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnPatient.addMouseListener(new MouseAdapter() {
@@ -76,6 +79,7 @@ public class PatientOrDoctor extends JFrame {
 		btnPatient.setBounds(143, 261, 89, 23);
 		contentPane.add(btnPatient);
 		
+		//Select if the user is a doctor then take the user to the doctor login
 		JButton btnDoctor = new JButton("Doctor");
 		btnDoctor.setFont(new Font("Calibri", Font.PLAIN, 12));
 		btnDoctor.addMouseListener(new MouseAdapter() {
@@ -89,10 +93,26 @@ public class PatientOrDoctor extends JFrame {
 		btnDoctor.setBounds(256, 261, 89, 23);
 		contentPane.add(btnDoctor);
 		
+		//Display the G1 logo
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(PatientOrDoctor.class.getResource("/mainapplication/Logo.png")));
 		lblNewLabel.setBounds(142, 30, 251, 169);
 		contentPane.add(lblNewLabel);
+		
+		//Clicking this button quits the program
+		JButton btnQuit = new JButton("Quit");
+		btnQuit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				close();
+			}
+		});
+		btnQuit.setFont(new Font("Calibri", Font.PLAIN, 12));
+		btnQuit.setBounds(203, 295, 89, 23);
+		contentPane.add(btnQuit);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
-
 }

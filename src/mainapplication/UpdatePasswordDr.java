@@ -1,6 +1,7 @@
 package mainapplication;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -27,7 +28,7 @@ import java.sql.ResultSet;
 public class UpdatePasswordDr extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txt_username;
+	public static String username;
 	private JPasswordField txt_newpw;
 	private JPasswordField txt_confirmpw;
 	
@@ -35,6 +36,7 @@ public class UpdatePasswordDr extends JFrame {
 	
 	PreparedStatement pst = null;
 	ResultSet rs = null;
+	private JPasswordField txt_currentpw;
 
 	/**
 	 * Launch the application.
@@ -62,6 +64,8 @@ public class UpdatePasswordDr extends JFrame {
 	 * Create the frame.
 	 */
 	public UpdatePasswordDr() {
+		username = DoctorLogin.getUsername();
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UpdatePasswordDr.class.getResource("/mainapplication/Logo.png")));
 		setTitle("Update Password");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -77,16 +81,10 @@ public class UpdatePasswordDr extends JFrame {
 		label.setBounds(175, 70, 173, 14);
 		contentPane.add(label);
 		
-		JLabel label_1 = new JLabel("Username");
-		label_1.setFont(new Font("Calibri", Font.PLAIN, 12));
-		label_1.setBounds(118, 126, 91, 14);
-		contentPane.add(label_1);
-		
-		txt_username = new JTextField();
-		txt_username.setFont(new Font("Calibri", Font.PLAIN, 12));
-		txt_username.setColumns(10);
-		txt_username.setBounds(219, 120, 144, 20);
-		contentPane.add(txt_username);
+		JLabel lblCurrentPassword = new JLabel("Current Password");
+		lblCurrentPassword.setFont(new Font("Calibri", Font.PLAIN, 12));
+		lblCurrentPassword.setBounds(99, 126, 110, 14);
+		contentPane.add(lblCurrentPassword);
 		
 		txt_newpw = new JPasswordField();
 		txt_newpw.setBounds(219, 159, 144, 20);
@@ -94,35 +92,51 @@ public class UpdatePasswordDr extends JFrame {
 		
 		JLabel label_2 = new JLabel("New Password");
 		label_2.setFont(new Font("Calibri", Font.PLAIN, 12));
-		label_2.setBounds(118, 162, 91, 14);
+		label_2.setBounds(99, 162, 110, 14);
 		contentPane.add(label_2);
 		
-		JLabel label_3 = new JLabel("Confirm");
-		label_3.setFont(new Font("Calibri", Font.PLAIN, 12));
-		label_3.setBounds(118, 203, 69, 14);
-		contentPane.add(label_3);
+		JLabel lblConfirmPassword = new JLabel("Confirm Password");
+		lblConfirmPassword.setFont(new Font("Calibri", Font.PLAIN, 12));
+		lblConfirmPassword.setBounds(99, 203, 110, 14);
+		contentPane.add(lblConfirmPassword);
 		
 		txt_confirmpw = new JPasswordField();
 		txt_confirmpw.setBounds(219, 200, 144, 20);
 		contentPane.add(txt_confirmpw);
 		
+		txt_currentpw = new JPasswordField();
+		txt_currentpw.setBounds(219, 122, 144, 20);
+		contentPane.add(txt_currentpw);
+		
 		JButton button = new JButton("Update");
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String sql = "UPDATE doctors SET password=? WHERE username=?";
+				String sql = "SELECT password FROM doctors WHERE username=?";
 				
 				try{
 					pst = con.prepareStatement(sql);
-						if (txt_newpw.getText().equals(txt_confirmpw.getText()))
+					pst.setString(1, username);
+					rs = pst.executeQuery();
+					
+					while (rs.next())
+					{
+						if (rs.getString("password").equals(txt_currentpw.getText()))
 						{
-							pst.setString(1, txt_newpw.getText());
-							pst.setString(2, txt_username.getText());
-							int rowsupdated = pst.executeUpdate();
-							if	(rowsupdated > 0)
-								JOptionPane.showMessageDialog(null, "Password successfully updated.");
+							if (txt_newpw.getText().equals(txt_confirmpw.getText()))
+							{
+									String sql1 = "UPDATE doctors SET password=? WHERE username=?";
+									pst = con.prepareStatement(sql1);
+									pst.setString(1, txt_newpw.getText());
+									pst.setString(2, username);
+									int rowsupdated = pst.executeUpdate();
+									if	(rowsupdated > 0)
+										JOptionPane.showMessageDialog(null, "Password successfully updated.");
+							}else
+								JOptionPane.showMessageDialog(null, "Passwords do not match.");
 						}else
-						JOptionPane.showMessageDialog(null, "Current password is incorrect.");
+							JOptionPane.showMessageDialog(null, "Current password is incorrect");
+					}
 				}catch(Exception ex){
 					JOptionPane.showMessageDialog(null,ex);
 				}
@@ -144,6 +158,9 @@ public class UpdatePasswordDr extends JFrame {
 		button_1.setFont(new Font("Calibri", Font.PLAIN, 12));
 		button_1.setBounds(274, 259, 89, 23);
 		contentPane.add(button_1);
+		
+		//center jFrame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
-
 }
