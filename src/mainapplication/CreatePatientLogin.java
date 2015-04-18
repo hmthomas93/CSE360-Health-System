@@ -133,16 +133,29 @@ public class CreatePatientLogin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String sql = "INSERT INTO `patients`(`username`, `firstname`, `lastname`, `dob`, `diagnosis`) VALUES (?,?,?,?,?)";
+				String sql1 = "SELECT * FROM patients WHERE username=?";
+				String username = txt_username.getText();
 				try{
-					pst = con.prepareStatement(sql);
-					pst.setString(1, txt_username.getText());
-					pst.setString(2, txt_firstname.getText());
-					pst.setString(3, txt_lastname.getText());
-					pst.setString(4, txt_dob.getText());
-					pst.setString(5, txt_diagnosis.getText());
-					pst.executeUpdate();
+					pst = con.prepareStatement(sql1);
+					pst.setString(1, username);
+					rs = pst.executeQuery();
 					
-					JOptionPane.showMessageDialog(null,"Patient created successfully.");
+					while(rs.next())
+					{
+						if (rs.getString("username").equals(username))
+							JOptionPane.showMessageDialog(null, "A patient already exists with that username.");
+						else
+						{
+							pst = con.prepareStatement(sql);
+							pst.setString(1, username);
+							pst.setString(2, txt_firstname.getText());
+							pst.setString(3, txt_lastname.getText());
+							pst.setString(4, txt_dob.getText());
+							pst.setString(5, txt_diagnosis.getText());
+							pst.executeUpdate();
+							JOptionPane.showMessageDialog(null,"Patient created successfully.");
+						}
+					}
 				}catch(Exception ex){
 					JOptionPane.showMessageDialog(null,ex);
 				}
